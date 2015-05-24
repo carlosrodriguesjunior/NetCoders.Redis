@@ -1,9 +1,5 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Diagnostics;
-using System.Linq;
-using System.Net;
-using System.Net.Http;
 using System.Web.Http;
 
 namespace NetCoders.RedisApi
@@ -11,32 +7,24 @@ namespace NetCoders.RedisApi
     public class ProductsController : ApiController
     {
 
+        //Nossa api exposta para o retorno de dados
         public IEnumerable<Product> Get()
         {
-             var watch = Stopwatch.StartNew();
-            var lista =  new ProductRepository().GetAll();
+            //StopWatch é uma classe para medição de tempo
+            //Iniciamos a medição de tempo
+            var watch = Stopwatch.StartNew();
+
+            //Instanciamos o nosso repositorio de dados de Produtos e obtemos os dados
+            var list =  new ProductRepository().GetAll();
+
+            //Paramos a medição de tempo
             watch.Stop();
-             System.Diagnostics.Debug.WriteLine("Tempo decimal Processamento :" + watch.ElapsedMilliseconds);
-            return lista;
-        }
 
-        public string Get(int id)
-        {
-            return "value";
-        }
+            //Exibimos no output do servidor o tempo de processamento do método de obtenção de dados
+            Debug.WriteLine("Tempo Processamento :" + watch.ElapsedMilliseconds);
 
-        public void Post([FromBody]string value)
-        {
-
-            
-        }
-
-        public void Put(int id, [FromBody]string value)
-        {
-        }
-
-        public void Delete(int id)
-        {
+            //Retorna os dados para a nossa api
+            return list;
         }
     }
 }

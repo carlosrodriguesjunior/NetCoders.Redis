@@ -1,13 +1,10 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Data.Entity;
 using System.Data.Entity.Migrations;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace NetCoders.RedisApi
 {
+    //Contexto de Dados do EntityFramework
     public class Context : DbContext
     {
         public Context()
@@ -19,6 +16,7 @@ namespace NetCoders.RedisApi
     }
 
     //running Update-Database
+    //Seed de nossa base de dados
     public class ProductConfiguration : DbMigrationsConfiguration<Context>
     {
         public ProductConfiguration()

@@ -14,6 +14,7 @@ namespace NetCoders.RedisApi
 
         protected void Application_Start(object sender, EventArgs e)
         {
+            //Configuramos nossa WebApi
             GlobalConfiguration.Configure(WebApiConfig.Register);
 
         }
