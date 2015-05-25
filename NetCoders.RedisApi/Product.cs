@@ -7,6 +7,5 @@
 
         public float Value { get; set; }
 
-        public string Observation { get; set; }
     }
 }

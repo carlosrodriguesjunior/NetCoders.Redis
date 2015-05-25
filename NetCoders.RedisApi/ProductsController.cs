@@ -6,8 +6,7 @@ namespace NetCoders.RedisApi
 {
     public class ProductsController : ApiController
     {
-
-        //Nossa api exposta para o retorno de dados
+        //Nossa api exposta para o retorno de dados        
         public IEnumerable<Product> Get()
         {
             //StopWatch é uma classe para medição de tempo

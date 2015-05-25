@@ -30,8 +30,7 @@ namespace NetCoders.RedisApi
                 context.Products.Add(new Product
                 {
                     Description = "Produto " + i,
-                    Value = 100.0F,
-                    Observation = Guid.NewGuid().ToString()
+                    Value = 100.0F
                 });
 
                 context.SaveChanges();

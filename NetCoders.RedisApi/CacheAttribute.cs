@@ -1,6 +1,5 @@
-﻿using Newtonsoft.Json;
+﻿using NServiceKit.Redis;
 using PostSharp.Aspects;
-using StackExchange.Redis;
 using System;
 using System.Collections.Generic;
 using System.Text;
@@ -18,26 +17,21 @@ namespace NetCoders.RedisApi
         //Sobrescrevemos o OnEntry para interceptarmos  a entrada da execução do método a ser cacheado
         public override void OnEntry(MethodExecutionArgs args)
         {
-            //Estabelecendo conexão com o redis através do StackExchange.Redis e adcionamos sua using
-            ConnectionMultiplexer redis = ConnectionMultiplexer.Connect("127.0.0.1:6379, abortConnect=false");
-
-            //Verificamos se a conexão foi estabelecida com sucesso
-            if (redis.IsConnected)
+            //Conectando no Redis utilizando o NserviceKit adicionar a Using NServiceKit.Redis;
+            using (var redis = new RedisClient("127.0.0.1", 6379))
             {
-                //Criamos o objeto de dados do Redis
-                IDatabase db = redis.GetDatabase();
 
-                //Obtemos os dados da nossa Key-chave
-                var result = db.StringGet(GetKeyCache(args));
+                    //Obtemos os dados da nossa Key-chave no redis
+                    var result = redis.Get<IEnumerable<Product>>(GetKeyCache(args));
 
-                //Se o resultado não estiver nulo, entao temos dados em e vamos retorna-lo sem que o Metodo em questão seja executado
-                if (!result.IsNull)
-                {
-                    //Pegamos o valor obtido no cache e informamos para nossa AOP que vamos retornar esses valores
-                    args.ReturnValue = JsonConvert.DeserializeObject<IEnumerable<Product>>(result);
-                    //Informamos para a nossa AOP que não precisa executar o método em questão e retornar os valores obtido no cache
-                    args.FlowBehavior = FlowBehavior.Return;
-                }
+                    //Se o resultado não estiver nulo, entao temos dados em e vamos retorna-lo sem que o Metodo em questão seja executado
+                    if (result !=null)
+                    {
+                        //Pegamos o valor obtido no cache e informamos para nossa AOP que vamos retornar esses valores
+                        args.ReturnValue = result;
+                        //Informamos para a nossa AOP que não precisa executar o método em questão e retornar os valores obtido no cache
+                        args.FlowBehavior = FlowBehavior.Return;
+                    }
             }
 
         }
@@ -45,17 +39,14 @@ namespace NetCoders.RedisApi
         //Sobreescrevemos o OnExit para interceptarmos os dados que vão ser retornados no metodo cacheado e guardamos no Redis
         public override void OnExit(MethodExecutionArgs args)
         {
-            //Estabelece Conexão com o Redis
-            ConnectionMultiplexer redis = ConnectionMultiplexer.Connect("127.0.0.1:6379, abortConnect=false");
-
-            if (redis.IsConnected)
+            //Conectamos no Redis  com o NserviceKit
+            using (var redis = new RedisClient("127.0.0.1", 6379))
             {
-                IDatabase db = redis.GetDatabase();
-
+                //Obtemos nossa chave
                 var key = GetKeyCache(args);
-
-                //Guarda o valor retornado no Redis para que o mesmo seja cacheado
-                db.StringSet(key, JsonConvert.SerializeObject(args.ReturnValue), TimeSpan.FromMinutes(10));
+                
+                //Guardamos o retorno do método no Cache
+                redis.Set<IEnumerable<Product>>(GetKeyCache(args), (IEnumerable<Product>)args.ReturnValue, TimeSpan.FromMinutes(10));
             }
         }
 
