@@ -11,7 +11,7 @@ namespace NetCoders.RedisApi
         [Cache]
         public IEnumerable<Product> GetAll()
         {
-            //System.Threading.Thread.Sleep(5000);
+            //System.Threading.Thread.Sleep(1000);
 
             //Instancia o nosso objeto de Contexto do EntityFramework
             using (var context = new Context())
