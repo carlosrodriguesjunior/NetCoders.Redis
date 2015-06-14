@@ -8,7 +8,9 @@ Referências
 
 http://redis.io
 
-http://waldyrfelix.net/2014/10/01/palestra-escalando-aplicacoes-com-redis-dnad-2014/http://oldblog.antirez.com/post/redis-memcached-benchmark.html
+http://waldyrfelix.net/2014/10/01/palestra-escalando-aplicacoes-com-redis-dnad-2014
+
+http://oldblog.antirez.com/post/redis-memcached-benchmark.html
 
 https://github.com/NServiceKit/NServiceKit.Redis
 
